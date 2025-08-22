@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './navbar/Home';
 import Login from './navbar/Login';
 import Register from './navbar/Register';
-import RootLayout from '../src/RootLayout';
+import RootLayout from './RootLayout';
 import ErrorPage from './specialsetups/ErrorPage';
 import VideoUpload from './navbar/VideoUpload';
 import DataProtectionPolicy from './footer/DataProtectionPolicy';
