@@ -26,3 +26,10 @@ dist-ssr
 .env
 .env.*
 !.env.example
+.env.local
+.env.local
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
