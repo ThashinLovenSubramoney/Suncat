@@ -23,6 +23,7 @@ import { getStorage, ref as _ref } from 'firebase/storage';
 
 // Toggle comes from .env.local (false in local dev, true when you add real keys)
 const enabled = import.meta.env.VITE_FIREBASE_ENABLED === 'true';
+console.log('[firebase] VITE_FIREBASE_ENABLED =', import.meta.env.VITE_FIREBASE_ENABLED);
 console.log('[firebase] enabled =', enabled);
 
 // Defaults for local-dev (disabled)
@@ -52,7 +53,8 @@ if (enabled) {
     appId: import.meta.env.VITE_FIREBASE_APP_ID,
     measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
   };
-
+     console.log('[firebase] Initializing with config:', firebaseConfig);
+     
   const app = initializeApp(firebaseConfig);
   auth = getAuth(app);
   db = getFirestore(app);

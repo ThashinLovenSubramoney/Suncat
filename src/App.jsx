@@ -1,4 +1,4 @@
-import React, { Children } from 'react';
+import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Home from './navbar/Home';
 import Login from './navbar/Login';
@@ -18,7 +18,11 @@ import Brands from './navbar/Brands';
 import FoundingFathers from './navbar/FoundingFathers';
 import NextGeneration from './navbar/NextGeneration';
 import News from './navbar/News';
+import Portal from './navbar/Portal';
 
+
+// NEW
+import CustomerPortal from './customer/CustomerPortal';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +33,7 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
+      { path: 'portal', element: <Portal /> },   // 👈 NEW ROUTE HERE
       { path: 'video-upload', element: <VideoUpload /> },
       { path: 'video-alter', element: <VideoAlter /> },
       { path: 'videos', element: <Videos /> },
@@ -42,6 +47,8 @@ const router = createBrowserRouter([
       { path: 'next-generation', element: <NextGeneration /> },
       { path: 'news', element: <News /> },
 
+      // NEW
+      { path: 'portal', element: <CustomerPortal /> },
 
       { path: 'data-protection', element: <DataProtectionPolicy /> },
     ],
@@ -49,7 +56,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />
+  return <RouterProvider router={router} />;
 }
 
 export default App;
