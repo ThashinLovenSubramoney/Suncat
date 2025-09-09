@@ -5,38 +5,40 @@ import { auth, db, onAuthStateChanged } from '../firebaseconfig/firebase';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import Spinner from '../specialsetups/Spinner';
 
+const LOCAL_FALLBACK_MAIN = '/delivery-vehicles.jpg'; // <-- your local image in /public
+
 const Home = () => {
-  // Change this to your real admin email
   const adminEmail = 'admin@example.com';
 
-  const [mainImageUrl, setMainImageUrl] = useState('');
+  // start with the local fallback so something shows immediately
+  const [mainImageUrl, setMainImageUrl] = useState(LOCAL_FALLBACK_MAIN);
+
   const [showMainImageDialog, setShowMainImageDialog] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [hasProfile, setHasProfile] = useState(false);
-
   const [isLoading, setIsLoading] = useState(true);
 
   // --- Helpers ---
   const fetchMainImage = async () => {
     try {
       if (!db) {
-        // local dev with Firebase disabled
-        setMainImageUrl('/Suncat3.png');
+        // Firebase disabled locally → just use fallback
+        setMainImageUrl(LOCAL_FALLBACK_MAIN);
         return;
       }
       const docRef = doc(collection(db, 'settings'), 'background');
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const data = docSnap.data();
-        setMainImageUrl(data?.mainImageUrl || '/SUNCAT - DELIVERY VEHICLES.jpg');
+        setMainImageUrl(data?.mainImageUrl || LOCAL_FALLBACK_MAIN);
       } else {
-        setMainImageUrl('/Suncat3.png');
+        setMainImageUrl(LOCAL_FALLBACK_MAIN);
       }
     } catch (err) {
       console.error('Error fetching main image:', err);
-      setMainImageUrl('/Suncat3.png');
+      setMainImageUrl(LOCAL_FALLBACK_MAIN);
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +91,7 @@ const Home = () => {
   const handleMainImageUrlSubmit = async () => {
     const url = newImageUrl.trim();
     setNewImageUrl('');
-    setMainImageUrl(url || '/Suncat3.png');
+    setMainImageUrl(url || LOCAL_FALLBACK_MAIN);
     setShowMainImageDialog(false);
 
     if (!db) {
@@ -135,15 +137,15 @@ const Home = () => {
       </div>
 
       {/* Main Image */}
-      <div className="w-full md:w-3/4 max-w-xl mb-8">
-        <img
-          src={mainImageUrl || '/SUNCAT - DELIVERY VEHICLES.jpg'}
-          alt="Main"
-          className="mx-auto rounded-lg shadow-lg zoom"
-          style={{ maxWidth: '100%' }}
-          onError={(e) => (e.currentTarget.src = '/Suncat3.png')}
-        />
-      </div>
+<div className="w-full mb-8">
+  <img
+    src={mainImageUrl}
+    alt="Main"
+    className="w-full h-auto rounded-lg shadow-lg"
+    onError={(e) => (e.currentTarget.src = LOCAL_FALLBACK_MAIN)}
+  />
+</div>
+
 
       {/* Background Carousel */}
       <Carousel className="w-full md:w-3/4 mb-8" style={{ maxWidth: '600px' }} interval={2500}>
