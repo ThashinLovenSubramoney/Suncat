@@ -33,3 +33,7 @@ dist-ssr
 !.yarn/plugins
 !.yarn/sdks
 !.yarn/versions
+# never ship backend files to the public folder
+public/*.cjs
+public/*.mjs
+public/*.js
