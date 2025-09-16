@@ -1,259 +1,229 @@
-/* Tailwind CSS */
+/* =========================
+   Tailwind CSS
+   ========================= */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Base Styles */
+/* =========================
+   THEME TOKENS & BASELINE
+   ========================= */
+:root {
+  --bg: #ffffff;     /* default white background */
+  --fg: #0f172a;     /* slate-900-ish text */
+  --card: #ffffff;
+  --muted: #6b7280;
+}
 
+/* Ensure baseline applies even before JS */
+html, body, #root {
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Normalize */
+body { margin: 0; }
+img  { display: block; max-width: 100%; backface-visibility: hidden; }
+
+/* Kill the random green outlines across the site for now */
+*:focus { outline: none !important; }
+
+/* Theme: vivid (optional, toggled by theme.js) */
+body.theme-vivid {
+  --bg: linear-gradient(300deg, #ffffff, #2b1a4e, #000000);
+  --fg: #ffffff;
+  --card: rgba(0,0,0,0.45);
+}
+
+/* High-contrast mode */
 @media (forced-colors: active) {
-  body {
-    background-color: Window;
-    color: WindowText;
+  html, body, #root {
+    background-color: Window !important;
+    color: WindowText !important;
   }
 }
 
-/* Main App styles */
+/* Helpers */
+.page-bg { background: var(--bg); color: var(--fg); }
+.card-bg { background: var(--card); color: var(--fg); }
 
-body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  margin: 0;
-  background: linear-gradient(300deg, #ffffff, #2b1a4e, #000000);
-}
-
-#root {
-  flex: 1;
-}
-
-/* Additional Styles if carousel bootstrap using  */
-.carousel {
-  position: relative;
-}
-
-.carousel .carousel-item {
-  height: 400px; /* Set a fixed height for the carousel items */
-}
-
-.carousel .carousel-item img {
-  height: 100%;
-  object-fit: cover; /* Ensure images cover the carousel item area */
-}
-
+/* =========================
+   CAROUSEL (Bootstrap)
+   ========================= */
+.carousel { position: relative; }
+.carousel .carousel-item { height: 400px; }
+.carousel .carousel-item img { height: 100%; object-fit: cover; }
 .carousel-control-prev,
 .carousel-control-next,
-.carousel-indicators {
-  display: none; /* Hide left/right controls and indicators */
-}
+.carousel-indicators { display: none; }
 
-/* Extras */
+/* =========================
+   GRADIENT HELPERS
+   ========================= */
 .gradient-background1 {
   background: linear-gradient(300deg, #1693a3, #d9dee0, #031a30);
   background-size: 180% 180%;
   animation: gradient-animation 6s ease infinite;
 }
-
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
 .gradient-background2 {
   background: linear-gradient(300deg, #000000, #000000, #efe8e8);
   background-size: 180% 180%;
   animation: gradient-animation 6s ease infinite;
 }
-
-@keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Extras */
 .gradient-background3 {
   background: linear-gradient(300deg, #f7f3f3, #1d0e32, #78087c);
   background-size: 180% 180%;
   animation: gradient-animation 6s ease infinite;
 }
-
 @keyframes gradient-animation {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.wobble {
-  animation: wobble 3s ease infinite; /* Adjust animation duration */
-}
-
+/* =========================
+   MOTION / EFFECTS
+   ========================= */
+.wobble  { animation: wobble 3s ease infinite; }
+.wobble1 { animation: wobble 37s ease infinite; }
 @keyframes wobble {
-  0% {
-    transform: translateX(0%);
-  }
-  15% {
-    transform: translateX(-25%) rotate(-5deg);
-  }
-  30% {
-    transform: translateX(20%) rotate(3deg);
-  }
-  45% {
-    transform: translateX(-15%) rotate(-3deg);
-  }
-  60% {
-    transform: translateX(10%) rotate(2deg);
-  }
-  75% {
-    transform: translateX(-5%) rotate(-1deg);
-  }
-  100% {
-    transform: translateX(0%);
-  }
+  0% { transform: translateX(0%); }
+  15% { transform: translateX(-25%) rotate(-5deg); }
+  30% { transform: translateX(20%) rotate(3deg); }
+  45% { transform: translateX(-15%) rotate( -3deg); }
+  60% { transform: translateX(10%) rotate(2deg); }
+  75% { transform: translateX(-5%) rotate(1deg); }
+  100% { transform: translateX(0%); }
 }
 
-.wobble1 {
-  animation: wobble 37s ease infinite; /* Adjust animation duration */
-}
-
-@keyframes wobble {
-  0% {
-    transform: translateX(0%);
-  }
-  15% {
-    transform: translateX(-25%) rotate(-5deg);
-  }
-  30% {
-    transform: translateX(20%) rotate(3deg);
-  }
-  45% {
-    transform: translateX(-15%) rotate(-3deg);
-  }
-  60% {
-    transform: translateX(10%) rotate(2deg);
-  }
-  75% {
-    transform: translateX(-5%) rotate(-1deg);
-  }
-  100% {
-    transform: translateX(0%);
-  }
-}
-
-.zoom {
-  animation: zoom 1.5s ease infinite;
-}
-
+.zoom { animation: zoom 1.5s ease infinite; }
 @keyframes zoom {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-  100% {
-    transform: scale(1);
-  }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }
 
-/* Resources.css Styles */
-@keyframes rotate-y {
-  0% {
-    transform: perspective(1000px) rotateY(0deg);
-  }
-  100% {
-    transform: perspective(1000px) rotateY(180deg);
-  }
-}
+/* 3D helpers */
+.perspective  { perspective: 1000px; }
+.rotate-y-180 { transform: rotateY(180deg); }
 
-img {
-  backface-visibility: hidden;
-}
-
-/* img:hover {
-  animation: rotate-y 2s forwards;
-} */
-
-.perspective {
-  perspective: 1000px;
-}
-
-.rotate-y-180 {
-  transform: rotateY(180deg);
-}
-
-div {
-  backface-visibility: hidden;
-}
-
-.horizontal-rotate {
-  animation: horizontalRotate 3s linear infinite;
-}
-
+/* Horizontal rotations */
+.horizontal-rotate { animation: horizontalRotate 3s linear infinite; }
 @keyframes horizontalRotate {
-  0% {
-    transform: rotateY(0deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
+  0%   { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
 }
-
-.horizontal-spin {
-  animation: horizontalSpin 6s linear infinite;
-}
-
+.horizontal-spin { animation: horizontalSpin 6s linear infinite; }
 @keyframes horizontalSpin {
-  50% {
-    transform: rotateY(6deg);
-  }
-  100% {
-    transform: rotateY(360deg);
-  }
+  50%  { transform: rotateY(6deg); }
+  100% { transform: rotateY(360deg); }
 }
 
-.btn {
-  display: inline-block;
-  text-align: center;
-}
+/* Buttons */
+.btn { display: inline-block; text-align: center; }
 
-/* Used for videos  */
-.video-container {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio */
-}
-
+/* =========================
+   Video embed
+   ========================= */
+.video-container { position: relative; width: 100%; padding-top: 56.25%; }
 .video-container iframe {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%;
 }
 
-/* styles.css or your custom CSS file */
+/* =========================
+   Fonts
+   ========================= */
 .dancing-script-custom {
   font-family: "Dancing Script", cursive;
   font-optical-sizing: auto;
-  font-weight: 700; /* Use a supported weight for bold text */
+  font-weight: 700;
   font-style: normal;
 }
+
+/* =========================
+   Portal helpers
+   ========================= */
+@keyframes spinPortal { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.spin-slow         { animation: spinPortal 20s linear infinite; }
+.animate-spin-slow { animation: spinPortal 12s linear infinite; }
+
+/* Emerald glow pulse */
+@keyframes glowPulseEmerald {
+  0%, 100% { box-shadow: 0 0 24px rgba(16,185,129,0.45); }
+  50%      { box-shadow: 0 0 64px rgba(16,185,129,0.85); }
+}
+.animate-glow-pulse { animation: glowPulseEmerald 2.8s ease-in-out infinite; }
+
+/* Green fire ring (outer effect) */
+.green-fire-ring {
+  position: relative;
+  border-radius: 9999px;
+  box-shadow: 0 0 30px rgba(16,185,129,0.35);
+  isolation: isolate;
+}
+.green-fire-ring::before {
+  content: "";
+  position: absolute;
+  inset: -3.5%;
+  border-radius: inherit;
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(16,185,129,0.0) 0deg,
+      rgba(52,211,153,0.35) 40deg,
+      rgba(110,231,183,0.85) 70deg,
+      rgba(52,211,153,0.55) 110deg,
+      rgba(16,185,129,0.0) 160deg,
+      rgba(34,197,94,0.45) 200deg,
+      rgba(16,185,129,0.9) 240deg,
+      rgba(5,150,105,0.45) 300deg,
+      rgba(16,185,129,0.0) 360deg
+    );
+  filter: blur(16px) saturate(130%);
+  mix-blend-mode: screen;
+  animation:
+    flame-rotate 8s linear infinite,
+    flame-flicker 900ms ease-in-out infinite;
+  z-index: -1;
+}
+.green-fire-ring::after {
+  content: "";
+  position: absolute;
+  inset: -9%;
+  border-radius: inherit;
+  background:
+    radial-gradient(closest-side, rgba(16,185,129,0.35), rgba(16,185,129,0.08) 55%, transparent 70%),
+    radial-gradient(closest-side, rgba(110,231,183,0.28), transparent 60%);
+  filter: blur(22px);
+  mix-blend-mode: screen;
+  animation: halo-breathe 2.8s ease-in-out infinite;
+  z-index: -2;
+}
+/* Keep the portal screen pinned and jitter-free */
+.portal-canvas {
+  position: fixed; /* pin to viewport so no scrollbars */
+  inset: 0;
+  overflow: hidden;
+}
+
+/* Defensive: ensure GPU acceleration for smoother spin */
+.spin-slow {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* The ring shouldn't cause layout reflow while glowing */
+.portal-ring {
+  will-change: box-shadow, transform;
+  transform: translateZ(0);
+}
+
+@keyframes flame-rotate { to { transform: rotate(360deg); } }
+@keyframes flame-flicker {
+  0%   { filter: blur(14px) saturate(120%) brightness(1.00); }
+  45%  { filter: blur(20px) saturate(150%) brightness(1.20); }
+  60%  { filter: blur(18px) saturate(135%) brightness(1.10); }
+  100% { filter: blur(14px) saturate(120%) brightness(1.00); }
+}
+@keyframes halo-breathe { 0%,100% { opacity: .55; } 50% { opacity: .95; } }

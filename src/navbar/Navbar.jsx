@@ -3,47 +3,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { auth, db, onAuthStateChanged, signOut } from '../firebaseconfig/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
-import '../CustomCSS/nabar.css';
-
-// Map emails -> customer metadata (expand later for more customers)
-const getCustomerForEmail = (email) => {
-  if (!email) return null;
-
-  const map = {
-    'kershnie.chetty@radissonblu.com': { id: 'radisson', name: 'Radisson Blu' },
-    // Future examples:
-    // 'buyer@coastlands.co.za': { id: 'coastlands', name: 'Coastlands Hotels' },
-    // 'orders@capitolcaterers.co.za': { id: 'capitol', name: 'Capitol Caterers' },
-  };
-
-  return map[email.toLowerCase()] || null;
-};
+// import '../CustomCSS/nabar.css'; // ← Temporarily comment out to avoid forced dark styles
 
 const Navbar = () => {
   const [user, setUser] = useState(null);
-  const [userDetails, setUserDetails] = useState(null);
   const clickSoundRef = useRef(null);
-  const adminDropdownRef = useRef(null);
   const navigate = useNavigate();
-
   const adminEmail = 'admin@example.com';
+
   const [isAdminDropdownOpen, setIsAdminDropdownOpen] = useState(false);
+  const adminDropdownRef = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Label for the portal tab (rename for Radisson)
-const portalLabel =
-  (user?.email?.toLowerCase() === 'kershnie.chetty@radissonblu.com')
-    ? 'Radisson Blu'
-    : 'Customer Portal';
+  // added state for userName and surname to fetch
+  const [userDetails, setUserDetails] = useState(null);
 
-  // Preload click sound
   useEffect(() => {
     clickSoundRef.current = new Audio('/Put.mp3');
-  }, []);
 
-  // Auth subscription (guarded for local dev)
-  useEffect(() => {
-    if (!auth) {
+    if (!onAuthStateChanged || !auth) {
       setUser(null);
       setUserDetails(null);
       return;
@@ -52,26 +30,15 @@ const portalLabel =
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
         setUser(currentUser);
-
-        // If Google auth, use displayName
-        if (currentUser.providerData?.[0]?.providerId === 'google.com') {
-          setUserDetails({
-            firstName: currentUser.displayName,
-            lastName: '',
-          });
-        } else {
-          // Otherwise try pull from Firestore /users
+        if (currentUser.providerData[0]?.providerId === 'google.com') {
+          setUserDetails({ firstName: currentUser.displayName, lastName: '' });
+        } else if (db) {
           try {
-            if (db) {
-              const usersRef = collection(db, 'users');
-              const q = query(usersRef, where('uid', '==', currentUser.uid));
-              const querySnapshot = await getDocs(q);
-              if (!querySnapshot.empty) {
-                const userDoc = querySnapshot.docs[0].data();
-                setUserDetails(userDoc);
-              } else {
-                setUserDetails(null);
-              }
+            const usersRef = collection(db, 'users');
+            const q = query(usersRef, where('uid', '==', currentUser.uid));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) {
+              setUserDetails(querySnapshot.docs[0].data());
             } else {
               setUserDetails(null);
             }
@@ -79,6 +46,8 @@ const portalLabel =
             console.error('Error fetching user details:', error);
             setUserDetails(null);
           }
+        } else {
+          setUserDetails(null);
         }
       } else {
         setUser(null);
@@ -90,17 +59,19 @@ const portalLabel =
   }, []);
 
   const playClickSound = () => {
-    if (clickSoundRef.current) clickSoundRef.current.play();
+    try { clickSoundRef.current?.play(); } catch {}
   };
 
-  const handleLinkClick = () => {
-    playClickSound();
-    setIsMenuOpen(false);
+  const logout = async () => {
+    try {
+      if (signOut && auth) await signOut(auth);
+      navigate('/');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
-  const toggleAdminDropdown = () => setIsAdminDropdownOpen(!isAdminDropdownOpen);
+  const toggleAdminDropdown = () => setIsAdminDropdownOpen((s) => !s);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -112,33 +83,44 @@ const portalLabel =
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const logout = async () => {
-    try {
-      if (auth) {
-        await signOut(auth);
-      }
-      navigate('/');
-    } catch (error) {
-      console.error(error);
-    }
+  const toggleMenu = () => setIsMenuOpen((s) => !s);
+
+  const handleLinkClick = () => {
+    playClickSound();
+    setIsMenuOpen(false);
   };
 
-  // Determine which customer this user belongs to (e.g., Radisson)
-  const customer = getCustomerForEmail(user?.email);
+  const linkClass = ({ isActive }) =>
+    [
+      'block px-2 py-1 rounded-md transition-colors',
+      'text-[var(--fg)]',
+      isActive ? 'font-semibold underline' : 'hover:bg-black/5',
+    ].join(' ');
 
   return (
-    <nav className="navbar">
-      <div className="container mx-auto flex flex-col md:flex-row md:justify-between items-center">
-        <div className="flex items-center mb-4 md:mb-0">
-          <Link to="/" className="text-2xl font-bold zoom" onClick={handleLinkClick}>
-            <img src="/Suncat3.png" alt="Logo" className="navbar-logo" />
-          </Link>
+    <nav
+      className="page-bg border-b border-black/10"
+      style={{ background: 'var(--bg)', color: 'var(--fg)' }}
+    >
+      <div className="container mx-auto flex flex-col md:flex-row md:justify-between items-center py-2 px-3">
+        <div className="flex items-center mb-2 md:mb-0">
+{/* src/navbar/Navbar.jsx — logo block */}
+<Link to="/" onClick={handleLinkClick} className="block">
+  <div className="h-14 md:h-16 lg:h-18 flex items-center">   {/* controls max logo height */}
+    <img
+      src="/SuncatDialedBack.jpg"
+      alt="Suncat"
+      className="block w-auto h-full object-contain"
+      style={{ imageRendering: 'auto' }}  // no smoothing quirks
+    />
+  </div>
+</Link>
         </div>
 
         {/* Burger Menu Button */}
-        <button className="block md:hidden" onClick={toggleMenu}>
+        <button className="block md:hidden text-[var(--fg)]" onClick={toggleMenu} aria-label="Menu">
           <svg
-            className="w-8 h-8 text-white"
+            className="w-8 h-8"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -154,108 +136,53 @@ const portalLabel =
             isMenuOpen ? 'block' : 'hidden'
           } md:block`}
         >
-          {user && (
-            
+          {user ? (
             <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1 hover:bg-black rounded-md'
-                }
-                onClick={handleLinkClick}
-              >
+              <NavLink to="/" className={linkClass} onClick={handleLinkClick}>
                 Home
               </NavLink>
-<NavLink
-  to="portal"
-  className={({ isActive }) =>
-    isActive
-      ? "active-link text-white block px-1 py-1"
-      : "text-white block px-1 py-1 hover:bg-black rounded-md"
-  }
-  onClick={handleLinkClick}
->
-  {portalLabel}
-</NavLink>
 
-              <NavLink
-                to="about-us"
-                className={({ isActive }) =>
-                  isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1 hover:bg-black rounded-md'
-                }
-                onClick={handleLinkClick}
-              >
+              <NavLink to="about-us" className={linkClass} onClick={handleLinkClick}>
                 About Us
               </NavLink>
 
-              <NavLink
-                to="founding-fathers"
-                className={({ isActive }) =>
-                  isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1 hover:bg-black rounded-md'
-                }
-                onClick={handleLinkClick}
-              >
+              <NavLink to="founding-fathers" className={linkClass} onClick={handleLinkClick}>
                 Founding Fathers
               </NavLink>
-
-              <NavLink
-                to="contact-us"
-                className={({ isActive }) =>
-                  isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1 hover:bg-black rounded-md'
-                }
-                onClick={handleLinkClick}
-              >
+<NavLink to="/portal-fullscreen" className={linkClass} onClick={handleLinkClick}>
+  Customer Portal
+</NavLink>
+              <NavLink to="contact-us" className={linkClass} onClick={handleLinkClick}>
                 Contact Us
               </NavLink>
+              
 
-              {/* Customer Portal (renames to the customer's display name) */}
-              {customer && (
-                <NavLink
-                  to={`/${customer.id}-portal`}
-                  className={({ isActive }) =>
-                    isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1 hover:bg-black rounded-md'
-                  }
-                  onClick={handleLinkClick}
-                >
-                  {customer.name || 'Customer Portal'}
-                </NavLink>
-              )}
-
-              {/* Admin Dropdown */}
+              {/* Admin dropdown */}
               {user.email === adminEmail && (
                 <div className="relative" ref={adminDropdownRef}>
-                  <button onClick={toggleAdminDropdown} className="bg-black rounded-md p-2 hover:text-blue-500 shadow-neon">
+                  <button
+                    onClick={toggleAdminDropdown}
+                    className="card-bg border border-black/10 rounded-md px-3 py-2 hover:bg-black/5"
+                  >
                     Admin Actions
                   </button>
                   {isAdminDropdownOpen && (
-                    <ul className="absolute bg-gray-800 text-white rounded mt-2 shadow-lg">
-                      <NavLink
-                        to="video-upload"
-                        className={({ isActive }) =>
-                          isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1'
-                        }
-                        onClick={handleLinkClick}
-                      >
-                        Video Upload
-                      </NavLink>
-                      <NavLink
-                        to="video-alter"
-                        className={({ isActive }) =>
-                          isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1'
-                        }
-                        onClick={handleLinkClick}
-                      >
-                        Video Alter
-                      </NavLink>
-                      <NavLink
-                        to="next-generation"
-                        className={({ isActive }) =>
-                          isActive ? 'active-link text-white block px-1 py-1' : 'text-white block px-1 py-1'
-                        }
-                        onClick={handleLinkClick}
-                      >
-                        Next Generation
-                      </NavLink>
+                    <ul className="absolute right-0 mt-2 card-bg border border-black/10 rounded shadow-md text-left">
+                      <li>
+                        <NavLink to="video-upload" className={linkClass} onClick={handleLinkClick}>
+                          Video Upload
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="video-alter" className={linkClass} onClick={handleLinkClick}>
+                          Video Alter
+                        </NavLink>
+                      </li>
+                      <li>
+                        <NavLink to="next-generation" className={linkClass} onClick={handleLinkClick}>
+                          Next Generation
+                        </NavLink>
+                      </li>
                     </ul>
                   )}
                 </div>
@@ -263,32 +190,33 @@ const portalLabel =
 
               {/* Welcome pill */}
               {userDetails && (
-                <div className="welcome-message-container">
+                <div className="card-bg border border-black/10 rounded-full px-3 py-1">
                   {userDetails.firstName ? (
-                    <span className="welcome-message text-white bg-teal-600 rounded-full p-1 md:mb-0 shadow-nature">
+                    <span>
                       Welcome {userDetails.firstName} {userDetails.lastName}
                     </span>
                   ) : (
-                    <span className="welcome-message text-white bg-teal-600 rounded-full p-1 md:mb-0">
-                      Welcome {user.email}
-                    </span>
+                    <span>Welcome {user.email}</span>
                   )}
                 </div>
               )}
 
-              {/* Logout */}
-              <button onClick={logout} className="text-white hover:text-blue-500">
+              <button
+                onClick={logout}
+                className="card-bg border border-black/10 rounded-md px-3 py-2 hover:bg-black/5"
+              >
                 Logout
               </button>
             </div>
-          )}
-
-          {!user && (
+          ) : (
             <div className="flex flex-col md:flex-row md:items-center space-y-2 md:space-y-0 md:space-x-4">
-              <NavLink to="register" onClick={handleLinkClick} className="text-white hover:text-blue-500">
+              <NavLink to="/portal-fullscreen" onClick={handleLinkClick} className={linkClass}>
+              Customer Portal
+              </NavLink>
+              <NavLink to="register" onClick={handleLinkClick} className={linkClass}>
                 Register
               </NavLink>
-              <NavLink to="login" onClick={handleLinkClick} className="text-white hover:text-blue-500 ">
+              <NavLink to="login" onClick={handleLinkClick} className={linkClass}>
                 Login
               </NavLink>
             </div>

@@ -110,7 +110,7 @@ const Home = () => {
 
   return (
     <div
-      className="flex flex-col items-center justify-start min-h-screen p-4 relative bg-gray-900"
+      className="bg-[var(--card)] p-6 rounded-lg shadow-nature"
       style={{
         backgroundSize: 'cover',
         backgroundPosition: 'center',
@@ -119,20 +119,12 @@ const Home = () => {
         filter: 'brightness(90%)',
       }}
     >
-      {isAdmin && (
-        <button
-          className="relative top-3 left-4 md:left-3 bg-teal-600 text-white mb-4 px-4 py-2 rounded-full shadow-lg hover:bg-teal-700 transition-colors duration-300 z-10"
-          onClick={() => setShowMainImageDialog(true)}
-        >
-          Change Main Image
-        </button>
-      )}
 
-      <h1 className="text-3xl md:text-4xl rounded-full shadow-teal p-3 font-bold text-center mb-8 text-white gradient-background1">
+      <h1 className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
         Welcome to the Suncat Distribution Network
       </h1>
 
-      <div className="text-sm rounded-md shadow-teal p-2 text-center mb-8 text-white hover:bg-black">
+      <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
         <p>Our reach is ever evolving. Please feel free to join, contact us, or simply explore.</p>
       </div>
 

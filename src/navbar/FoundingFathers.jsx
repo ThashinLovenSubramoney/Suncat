@@ -16,7 +16,7 @@ export default function FoundingFathers() {
   }, [location.hash]);
 
   return (
-    <section className="bg-gray-900 text-gray-100 py-12">
+    <section className="page-bg py-12">
       <div className="container mx-auto px-4">
         {/* ---- Founding Fathers (original) ---- */}
         <div className="text-center mb-12">
@@ -31,7 +31,7 @@ export default function FoundingFathers() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-nature hover:bg-black">
+          <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
             <h2 className="text-2xl font-semibold mb-4">Loven Subramoney</h2>
             <p className="text-lg">
               <strong>Current Directorship</strong><br />
@@ -46,7 +46,7 @@ export default function FoundingFathers() {
             </p>
           </div>
 
-          <div className="bg-gray-800 p-6 rounded-lg shadow-sky hover:bg-black">
+          <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
             <h2 className="text-2xl font-semibold mb-4">Alan Govender</h2>
             <p className="text-lg">
               <strong>Ex Directorship (… to 2017)</strong><br />
@@ -72,7 +72,7 @@ export default function FoundingFathers() {
     </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <div className="bg-gray-800 p-6 rounded-lg shadow-sky hover:bg-black">
+            <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
               <h3 className="text-2xl font-semibold mb-4">Our Mission</h3>
               <p>
                 Our unique establishment places us in a strategic position between end users and
@@ -84,7 +84,7 @@ export default function FoundingFathers() {
               </p>
             </div>
 
-            <div className="bg-gray-800 p-6 rounded-lg shadow-teal hover:bg-black">
+            <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
               <h3 className="text-2xl font-semibold mb-4">Our Offices</h3>
               <p>
                 Located in Kwazulu Natal, our warehouse is situated in Phoenix Industrial Park
@@ -96,7 +96,7 @@ export default function FoundingFathers() {
             </div>
 
             {/* Hidden-for-now section kept for parity with original layout */}
-            <div className="bg-gray-800 p-6 rounded-lg shadow-sky hover:bg-black">
+            <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
               <h3 className="text-2xl font-semibold mb-4">Why Choose Us?</h3>
               <p>
                 Our organization comprises multidimensional experts spanning various disciplines

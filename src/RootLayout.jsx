@@ -1,20 +1,40 @@
-import React from "react"
-import Navbar from "./navbar/Navbar"
-import ScrollToTop from "./specialsetups/ScrollToTop"
-import { Outlet } from "react-router-dom"
-import Footer from "./footer/Footer"
+// src/RootLayout.jsx
+import React from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import Navbar from "./navbar/Navbar";
+import Footer from "./footer/Footer";
 
-const RootLayout = () => {
-    return (
-        <>
-            <ScrollToTop />
-            <Navbar />
-            <main>
-                <Outlet />
-            </main>
-            <Footer />
-        </>
-    )
+export default function RootLayout() {
+  const { pathname } = useLocation();
+  const isFullscreenPortal = pathname === "/portal-fullscreen";
+
+  return (
+    <div
+      className={
+        isFullscreenPortal
+          ? "min-h-dvh bg-black text-white"
+          : "min-h-screen page-bg"
+      }
+      style={
+        isFullscreenPortal
+          ? undefined
+          : { background: "var(--bg)", color: "var(--fg)" }
+      }
+    >
+      {/* Hide chrome on fullscreen portal */}
+      {!isFullscreenPortal && <Navbar />}
+
+      <main
+        className={
+          isFullscreenPortal
+            ? "min-h-dvh w-full flex" // no container/padding; let child center itself
+            : "container mx-auto px-3 py-4"
+        }
+      >
+        <Outlet />
+      </main>
+
+      {!isFullscreenPortal && <Footer />}
+    </div>
+  );
 }
-
-export default RootLayout;

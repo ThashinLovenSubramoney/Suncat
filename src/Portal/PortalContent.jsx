@@ -7,7 +7,7 @@ export default function PortalContent({ onUnlock, variant = "fullscreen" }) {
   const handleClick = () => {
     setMsg("The gateway hums…");
     setTimeout(() => setMsg(""), 1500);
-    onUnlock?.(true); // optional: mark unlock for your theme, harmless if unused
+   // onUnlock?.(true); //disabled
   };
 
   return (
@@ -19,20 +19,29 @@ export default function PortalContent({ onUnlock, variant = "fullscreen" }) {
       }
     >
       {/* Rotating portal image */}
-      <div
-        className="relative w-[320px] h-[320px] md:w-[420px] md:h-[420px] flex items-center justify-center select-none"
-        onClick={handleClick}
-        role="button"
-        aria-label="Open portal"
-        title="Open portal"
-      >
-        <img
-          src="/TransparentPortal.png"
-          alt="Suncat Portal"
-          className="w-full h-full object-contain animate-spin-slow will-change-transform"
-          draggable="false"
-        />
-      </div>
+{/* Big circular ring with green glow (clickable) */}
+<div
+  className="
+    relative rounded-full
+    border-4 border-emerald-400
+    shadow-[0_0_40px_rgba(16,185,129,0.6)]
+    animate-glow-pulse
+    w-[92vw] max-w-[940px] aspect-square
+    flex items-center justify-center select-none
+  "
+  onClick={handleClick}
+  role="button"
+  aria-label="Open portal"
+  title="Open portal"
+>
+  <img
+    src="/TransparentPortal(2).png"  /* or /TransparentPortal(2).png if that’s your file */
+    alt="Suncat Portal"
+    className="w-[94%] h-[94%] object-contain animate-spin-slow will-change-transform"
+    draggable="false"
+  />
+</div>
+
 
       {/* Click message */}
       {msg && (

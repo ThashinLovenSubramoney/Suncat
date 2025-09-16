@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function AboutUs() {
     return (
-        <section className="bg-gray-900 text-gray-100 py-12">
+        <section className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold mb-4 animate-bounce">About Us</h1>
@@ -12,14 +12,14 @@ export default function AboutUs() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    <div className="bg-gray-800 p-6 rounded-lg shadow-sky hover:bg-black">
+                    <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
                         <h2 className="text-2xl font-semibold mb-4 ">Our Mission</h2>
                         <p>
                             Our unique establishment places us in a strategic position between end users and larger corporations through business relations forged over two decades of strong workmanship, preexisting corporate experience, and orthodox methodology. As the world moves towards a globalized economic environment powered by technology, our mission is to align with the demands of the modern foodservices and hospitality industry.
                         </p>
                     </div>
 
-                    <div className="bg-gray-800 p-6 rounded-lg shadow-teal hover:bg-black">
+                    <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
                         <h2 className="text-2xl font-semibold mb-4">Our Offices</h2>
                         <p>
                             Located in Kwazulu Natal, our warehouse is situated in Phoenix Industrial Park where the bulk of our day-to-day operations are executed. Due to operational hours, all visitation is subject to negotiation with the warehouse to ensure efficient servicing of our existing clients and coordination with the operational activities of our neighbors within the office park.
@@ -27,7 +27,7 @@ export default function AboutUs() {
                     </div>
 
                     {/* Hidden for now */}
-                    <div className="bg-gray-800 p-6 rounded-lg shadow-sky hover:bg-black">
+                    <div className="bg-[var(--card)] p-6 rounded-lg shadow-nature">
                         <h2 className="text-2xl font-semibold mb-4">Why Choose Us?</h2>
                         <p>
                             Our organization comprises multidimensional experts spanning various disciplines from the South African Economy, including Wholesale, Distribution and Foodservices, Finance, Accounting & Auditing, Primary Medical Health Care, Media & Journalism, Information and Communications Technology & Law.
